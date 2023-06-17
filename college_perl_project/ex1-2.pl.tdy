@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+use strict;
+use Encode;
+use utf8;
+
+main();
+
+sub main {
+    my @list1 = ("赤", "青", "黄", "紫", "緑", "黒");
+    my @list2 = ("白", "黒", "青", "紫", "橙", "赤");
+
+    foreach my $li1 (@list1) {
+        foreach my $li2 (@list2) {
+            if ($li1 eq $li2) {
+                print encode_utf8("$li1\n");
+            }
+        }
+    }
+}

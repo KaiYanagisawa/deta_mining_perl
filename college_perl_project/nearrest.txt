@@ -1,0 +1,60 @@
+問題1
+    設問1
+    VD1 = {1, 1, 0, 0, 1, 1, 0, 1, 0, 0}
+    VD2 = {0, 1, 1, 1, 1, 0, 1, 0, 0, 0}
+    VD3 = {0, 0, 1, 1, 0, 1, 0, 1, 1, 0}
+    VD4 = {1, 0, 1, 0, 0, 0, 1, 1, 0, 1}
+    VD5 = {1, 1, 0, 0, 1, 0, 1, 0, 0, 1}
+    VT  = {1, 0, 1, 0, 0, 1, 0, 1, 1, 0}
+
+    設問2
+    dist(VD1, VT) = 3/5
+    dist(VD2, VT) = 1/5
+    dist(VD3, VT) = 4/5
+    dist(VD4, VT) = 3/5
+    dist(VD5, VT) = 1/5
+
+    設問3
+    class3
+
+設問2
+sub calc_cosin 
+{
+    my ($ref_HashX, $ref_HashY) = @_;
+    my %HashX = %{$ref_HashX};
+    my %HashY = %{$ref_HashY};
+    my %Hash;
+
+    # ノルムXを計算(分母)
+    my $X;
+    foreach my $term (keys %HashX)
+    {
+        my $rfidf = $HashX{$term};
+        $X += $rfidf;
+        $Hash{$term} = 1;
+    }
+
+    # ノルムYを計算(分母)
+    my $Y;
+    foreach my $term (keys %HashY)
+    {
+        my $rfidf = $HashY{$term};
+        $Y += $rfidf;
+        $Hash{$term}++;
+    }
+
+    # 内積を計算(分子)
+    my $P;
+    foreach my $term (keys %Hash)
+    {
+        if($Hash{$term} == 2)
+        {
+            my $tfidf_x = $HashX{$term};
+            my $tfidf_y = $HashY{$term};
+            $P += $tfidf_x * $tfidf_y;
+        }
+    }
+
+    my $cos = $P / sqrt($X) / sqrt($Y);
+    return $cos;
+}
