@@ -32,40 +32,40 @@ sub createModelFile
 
     my %TrainData;
 
-    my $N=0;      # 事例数
+    my $N = 0;      # 事例数
     my %Hypo;
 
     # 訓練データの読み込み
     # 例：$TrainData{○}->{天気:晴} = 頻度
-    while(my $data_utf8 = <IN>)
+    while (my $data_utf8 = <IN>)
     {
-          chomp($data_utf8);
-          my @Data = split(/\t/,decode_utf8($data_utf8));
+        chomp($data_utf8);
+        my @Data = split(/\t/,decode_utf8($data_utf8));
 
-          # ゴルフプレイ（○ or ×）を取得
-          my $det = pop(@Data);
+        # ゴルフプレイ（○ or ×）を取得
+        my $det = pop(@Data);
 
-          # 学習用データ事例数の総数
-          $Hypo{$det}++;
-          $N++;
+        # 学習用データ事例数の総数
+        $Hypo{$det}++;
+        $N++;
 
-          my $i;
-          for($i=0; $i<@Data; $i++)
-          {
-              my $tag = $Tag[$i];
-              my $data = $Data[$i];
+        my $i;
+        for ($i=0; $i<@Data; $i++)
+        {
+            my $tag = $Tag[$i];
+            my $data = $Data[$i];
 
-              # 属性：属性値（例　天気:晴） 
-              my $clause = $tag.":".$data;
+            # 属性：属性値（例　天気:晴） 
+            my $clause = $tag.":".$data;
 
-              # 各クラス（○ or ×）における属性値の頻度を格納
-              $TrainData{$det}->{$clause}++;
-          }
-          undef @Data;
+            # 各クラス（○ or ×）における属性値の頻度を格納
+            $TrainData{$det}->{$clause}++;
+        }
+			undef @Data;
     }
     close(IN);
 
-    my %PH;     # 事前確率 P(H=○,×)
+    my %PH;		# 事前確率 P(H=○,×)
     my %PE;     # 属性ごとの条件付き確率 P(E_{n}|H)
 
     # 学習式におけるパラメータを学習
@@ -73,7 +73,7 @@ sub createModelFile
     {
         # 事前確率: P(c)
         my $f_h = $Hypo{$det};
-	$PH{$det} = $f_h/$N;
+		$PH{$det} = $f_h/$N;
 
         # 各属性値の条件付き確率 P(e_{i}|c)
         foreach my $clause (keys %{$TrainData{$det}})
